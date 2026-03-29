@@ -1,42 +1,35 @@
-import mne
+from pathlib import Path
 import matplotlib.pyplot as plt
-import os
+import mne
 
-# Directory to save graph images
-GRAPH_DIR = 'generated_graphs'
-if not os.path.exists(GRAPH_DIR):
-    os.makedirs(GRAPH_DIR)
+import brain_loader
 
-def generate_psd_graph(raw_file_path):
-    """
-    Generates a Power Spectral Density (PSD) plot from a raw EEG file.
-    """
+GRAPH_DIR = Path(__file__).resolve().parent / 'generated_graphs'
+GRAPH_DIR.mkdir(exist_ok=True)
+
+
+def generate_psd_graph(raw: mne.io.BaseRaw, subject: str = '01', session: str = 'EEG') -> Path:
+    """Generate and save a PSD plot for the provided raw EEG data."""
+    fig = raw.plot_psd(show=False)
+    image_path = GRAPH_DIR / f'psd_sub-{subject}_ses-{session}.png'
+    fig.savefig(image_path)
+    plt.close(fig)
+    return image_path
+
+
+def generate_graph(subject: str = '01', session: str = 'EEG', task: str = 'inner') -> Path | None:
+    """Load ds004196 EEG and write a PSD image; returns the image path or None."""
     try:
-        raw = mne.io.read_raw_fif(raw_file_path, preload=True)
-        fig = raw.plot_psd(show=False)
-        
-        image_path = os.path.join(GRAPH_DIR, 'psd_graph.png')
-        fig.savefig(image_path)
-        plt.close(fig)
-        print(f"PSD graph saved to {image_path}")
-        return image_path
-    except Exception as e:
-        print(f"Error generating PSD graph: {e}")
+        info = brain_loader.load_raw_data(subject=subject, session=session, task=task)
+        return generate_psd_graph(info['raw'], subject=subject, session=session)
+    except Exception as exc:
+        print(f"Error generating graph: {exc}")
         return None
 
-def generate_graph():
-    """
-    Main function to generate a graph.
-    This is a placeholder and should be adapted to your needs.
-    """
-    # This assumes you have a file in brain_data
-    # You might need to run brain_loader.py first
-    data_file = '../brain_data/subject_1_run_1.fif'
-    if os.path.exists(data_file):
-        return generate_psd_graph(data_file)
-    else:
-        print("Data file not found. Run brain_loader.py to download it.")
-        return None
 
 if __name__ == '__main__':
-    generate_graph()
+    path = generate_graph()
+    if path:
+        print(f"PSD saved to {path}")
+    else:
+        print("Failed to generate PSD")

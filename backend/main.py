@@ -1,11 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 import uvicorn
 
-# Import your other modules
-# import brain_loader
-# import brain_graphs
+import brain_graphs
 # import brain_persona
 
 app = FastAPI()
@@ -26,17 +24,14 @@ app.add_middleware(
 
 @app.on_event("startup")
 async def startup_event():
-    # Load brain data on startup
-    # brain_loader.load_data()
     print("FastAPI server started.")
 
 @app.get("/api/brain-graph")
 async def get_brain_graph():
-    # Generate and return the brain graph
-    # image_path = brain_graphs.generate_graph()
-    # return FileResponse(image_path)
-    # Placeholder response
-    return {"message": "Brain graph endpoint"}
+    image_path = brain_graphs.generate_graph()
+    if image_path:
+        return FileResponse(path=image_path, media_type="image/png")
+    raise HTTPException(status_code=500, detail="Failed to generate brain graph")
 
 
 @app.post("/api/chat")
