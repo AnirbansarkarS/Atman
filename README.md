@@ -1,4 +1,4 @@
-# Atman — Uploaded Mind
+# Atman — Upload your Mind
 
 Atman is an interactive experiment merging human EEG neural data with an AI persona interpreting it. Connect with "Uploaded Minds" via chat, explore their neural graphs in real-time, and trigger thought associations directly into their digital cortex.
 
