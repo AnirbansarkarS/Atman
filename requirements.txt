@@ -1,8 +1,9 @@
 # Python dependencies
-
 fastapi
 uvicorn[standard]
 python-dotenv
 mne
 matplotlib
+scipy
 anthropic
+numpy
