@@ -7,3 +7,5 @@ matplotlib
 scipy
 anthropic
 numpy
+groq
+openneuro-py

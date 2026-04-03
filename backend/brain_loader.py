@@ -17,10 +17,21 @@ _BIDS_CANDIDATES = [
 
 
 def _find_bids_root() -> Path | None:
+    """Find BIDS dataset root, attempting download if missing."""
     for candidate in _BIDS_CANDIDATES:
-        if candidate.exists():
+        if candidate.exists() and (candidate / "dataset_description.json").exists():
             return candidate
-    return None
+    
+    # Dataset not found, try automatic download
+    print("[brain_loader] Dataset not found locally. Attempting automatic download...")
+    try:
+        import dataset_manager
+        return dataset_manager.get_dataset_path()
+    except Exception as e:
+        print(f"[brain_loader] Auto-download failed: {e}")
+        print("[brain_loader] Please download ds004196 manually from:")
+        print("[brain_loader] https://openneuro.org/datasets/ds004196")
+        return None
 
 
 # In-memory cache so each subject is loaded only once per server session
