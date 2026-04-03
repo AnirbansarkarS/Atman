@@ -52,3 +52,7 @@ yarn-error.log
 backend/generated_graphs/
 *.pyc
 debug.log
+
+# BIDS Dataset (download on first run, do not commit)
+ds004196/
+brain_data/

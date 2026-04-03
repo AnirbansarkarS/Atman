@@ -42,12 +42,33 @@ npm install
 npm run dev
 ```
 
+## 📥 Dataset Setup
+
+The EEG dataset (ds004196) is large and **not** committed to the repository. Download it on first run:
+
+```bash
+# Option 1: Automatic download (first time only)
+pip install openneuro-py
+python -m openneuro download ds004196
+# Dataset will be downloaded to ./ds004196/ directory
+
+# Option 2: Manual download
+# Visit: https://openneuro.org/datasets/ds004196
+# Download and extract to ./ds004196/ in project root
+```
+
+**Note:** The dataset is stored in BIDS format and is automatically cached after first download.
+
 ## ⚙️ Environment Variables
-To get the true AI persona experience (rather than local stub responses), place an `.env` file in the `backend/` directory:
+To get the true AI persona experience (rather than local stub responses), place an `.env` file in the project root:
 ```env
 CLAUDE_API_KEY=sk-ant-api03...
+GROQ_API_KEY=gsk_...
+GEMINI_API_KEY=AIza...
 ```
 If no key is present, the app degrades gracefully with placeholder "stub" responses.
+
+**⚠️ SECURITY:** Never commit your `.env` file. Add your actual API keys only locally—they are in `.gitignore`.
 
 ## ✅ Verification Checklist
 - **Backend:** `http://localhost:8000/docs` returns a Swagger UI.

@@ -24,6 +24,18 @@ fi
 echo "--> Installing backend dependencies..."
 pip install -r requirements.txt -q
 
+# Install openneuro-py for dataset management
+echo "--> Installing dataset manager (openneuro-py)..."
+pip install -q openneuro-py
+
+# Check and download dataset if missing
+echo "--> Checking EEG dataset..."
+if [ ! -d "ds004196" ] && [ ! -d "brain_data/ds004196" ]; then
+    echo "🔄 Dataset not found. Downloading ds004196..."
+    echo "   (This may take 5-10 minutes on first run)"
+    python3 backend/dataset_manager.py || echo "⚠️  Auto-download failed. Download manually from https://openneuro.org/datasets/ds004196"
+fi
+
 export PYTHONPATH="$PWD/backend"
 
 # 2. Setup Node.js Frontend
